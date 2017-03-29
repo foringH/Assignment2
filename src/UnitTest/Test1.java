@@ -10,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class Test1 {
+	private static final Class<IllegalArgumentException> expected = null;
 	public static ThreadManager t; 
 	@BeforeClass
 	public static void init() throws IOException
@@ -55,6 +56,28 @@ public class Test1 {
 		assertEquals("hello",t.getWriteThread().getLine());
 	}
 	
+	@Test(expected = IllegalArgumentException.class)
+	public void test5()
+	{
+		System.out.println("Testing readThread");
+		ReadThread rr = t.getReadThreads()[0];
+		
+		rr.run();		
+	}
+	
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void test6() throws IOException
+	{
+		System.out.println("Testing WriteThread");
+		WriteThread w ;
+		w = new WriteThread("D:/outputTest.txt");
+		w.setLine("hello");
+		
+		w.run();		
+		
+		//assertEquals("hello",w.getLine());
+	}
 	
 	
 

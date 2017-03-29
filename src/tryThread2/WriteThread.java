@@ -11,7 +11,7 @@ public class WriteThread implements Runnable{
 	private FileWriter writer = new FileWriter(destination);
 	private String line = "";
 	
-	WriteThread(String fileName) throws IOException
+	public WriteThread(String fileName) throws IOException
 	{
 		this.fileName = fileName;
 		//System.out.println("file name"+fileName);

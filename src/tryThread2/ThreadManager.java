@@ -43,7 +43,7 @@ public class ThreadManager {
 		
 	}
 	
-	private ReadThread[] getReadThreads()
+	public ReadThread[] getReadThreads()
 	{
 		return readThreads;
 		
@@ -148,7 +148,7 @@ public class ThreadManager {
     		return result;
 	}
 	
-	public String merge() throws InterruptedException
+	private String merge() throws InterruptedException
 	{
 		String temp = "";
 		for(int i=0;i<tempFileList.size();i++)
