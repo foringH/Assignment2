@@ -16,12 +16,10 @@ public class ReadThread implements Runnable {
 	ReadThread(ArrayList<File> files)
 	{
 		this.fileList = files;
-		
 	}
 	
 	public String getResult()
-	{
-		
+	{		
 		return result;
 	}
 	
@@ -52,11 +50,9 @@ public class ReadThread implements Runnable {
 	             String line = "";
 	                         
 	             while ((line = reader.readLine()) != null) {
-	            	 
-	                System.out.println("printing line"+line);
-	                 result=result+line;
-	                 System.out.println("rsult::::::"+result);
-	                 
+	            		               
+	                 result = result + line;
+	                
 	             }
 	             
 	             reader.close();
@@ -66,8 +62,8 @@ public class ReadThread implements Runnable {
 			
 		}
 		 
-		
 		return result;
+	
 	}
 
 

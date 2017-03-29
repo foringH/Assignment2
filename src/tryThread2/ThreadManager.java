@@ -26,6 +26,11 @@ public class ThreadManager {
 	private Thread mainThread;
 	
 	
+	public ThreadManager(String source,String destination, int threadNo) throws IOException
+	{
+		initialize(source,destination,threadNo);
+	}
+	
 	public String getWriteContent()
 	{
 		return writeContent;
@@ -34,22 +39,35 @@ public class ThreadManager {
 	
 	public void setWriteContent(String line)
 	{
-		writeContent = writeContent + line;
+		writeContent = line; //writeContent + line;
 		
 	}
 	
-	public void initialize(String source,String destination,int numOfThread) throws IOException
+	private ReadThread[] getReadThreads()
 	{
-		this.source=source;
+		return readThreads;
+		
+	}
+	
+	public WriteThread getWriteThread()
+	{
+		return writeThread;
+		
+	}
+		
+	private void initialize(String source,String destination,int numOfThread) throws IOException
+	{
+		this.source = source;
 		this.destination = destination;
-		System.out.println("destination in INIT"+destination);
+		
 		this.numberOfThread = numOfThread;
 		this.numberOfSet = this.numberOfThread;
 		
 		this.fileDirectory = new File(source);
         this.fileListOfDirectory = this.fileDirectory.listFiles();
+        //System.out.println("printing n:" + numberOfFiles + "jkl" + fileListOfDirectory.length);
         this.numberOfFiles = fileListOfDirectory.length;
-        System.out.println("printing n:" + numberOfFiles);
+        //System.out.println("printing n:" + numberOfFiles);
         
         if( this.fileListOfDirectory.length < this.numberOfThread )
         {
@@ -59,24 +77,20 @@ public class ThreadManager {
         
         this.fileNoInSet = (this.numberOfFiles/this.numberOfSet);
         
-        writeThread=new WriteThread(this.destination);
-		mainThread=new Thread(writeThread); 
+        writeThread = new WriteThread(this.destination);
+		mainThread = new Thread(writeThread); 
         
-		readThreads=new ReadThread[this.numberOfSet];
-		threads=new Thread[this.numberOfSet];
+		readThreads = new ReadThread[this.numberOfSet];
+		threads = new Thread[this.numberOfSet];
 				
 	}
 	
 
 	public String readWithThread() throws InterruptedException, IOException
 	{
-		System.out.println("hello");
-		
-        System.out.println("printing n:" + numberOfFiles);
+		String result = "";
         
-        String result = "";
-        
-        initialize(source,destination,numberOfThread);
+        //initialize(source,destination,numberOfThread);
         
         int index = 0;
 		
@@ -90,7 +104,9 @@ public class ThreadManager {
     				for( int fileNumber = 0; fileNumber < fileNoInSet; fileNumber++ )
     				{
     					index = ( fileNoInSet * setNumber ) + fileNumber;
-    					System.out.println("my set no:"+setNumber+" filrNo:"+index);
+    					
+    					//System.out.println("my set no:"+setNumber+" filrNo:"+index);
+    					
     					tempFiles.add(fileListOfDirectory[index]);
 
     				}
@@ -102,7 +118,7 @@ public class ThreadManager {
     				
     				while(index < numberOfFiles)
     				{					
-    					System.out.println("my set no:"+setNumber+" filrNo:"+index);
+    					//System.out.println("my set no:"+setNumber+" filrNo:"+index);
     					
     					tempFiles.add(fileListOfDirectory[index]);
     		        	    		        	
@@ -117,23 +133,17 @@ public class ThreadManager {
     		}
     		
     		
-    		for(int i=0;i<tempFileList.size();i++)
+    		for(int i = 0; i < tempFileList.size(); i++ )
     		{
-    			System.out.println("set is: "+i);
+    			//System.out.println("set is: "+i);
     			readThreads[i] = new ReadThread(tempFileList.get(i));
     			threads[i] = new Thread(readThreads[i]);
     			threads[i].start();
-    			
-    			for(File f: tempFileList.get(i))
-    			{
-    				System.out.println("file name is:"+f.getName());
-    				
-    			}
-    			
+    			    			
     		}
     		    		
     		result = result + merge();
-    		System.out.println("WRITECON" + result);
+    		
     		    		
     		return result;
 	}
@@ -146,21 +156,23 @@ public class ThreadManager {
 			
 			threads[i].join();
 			temp=temp+readThreads[i].getResult();
-			System.out.println("this is what i get"+temp);
+
 		}
+		
 		writeContent=writeContent+temp;
+		
 		return temp;
 	}
 	
-	public void write(String line)
+	public void writeWithThread(String line)
 	{
 		String temp = "";
 		
-		temp = getWriteContent();
-		System.out.println("the line is"+temp);
+		//temp = getWriteContent();
+		//System.out.println("the line is"+temp);
 				
-    	this.writeThread.setLine(temp);
-    	System.out.println("I want to write"+writeContent);
+    	this.writeThread.setLine(temp+line);
+    	//System.out.println("I want to write"+writeContent);
     	
 		this.mainThread.start();
 		

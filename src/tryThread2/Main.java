@@ -11,14 +11,14 @@ public class Main {
 		String destination="D:/output3.txt";
 		int threadNo=3;
 		
-		RandomFileGenerate randomFiles = new RandomFileGenerate(source,100);
+		//RandomFileGenerate randomFiles = new RandomFileGenerate(source,1000);
 		
-		ThreadManager manager = new ThreadManager();
+		ThreadManager manager = new ThreadManager(source, destination, threadNo);
 		
-		manager.initialize(source, destination, threadNo);
+		//manager.initialize(source, destination, threadNo);
 		String line= manager.readWithThread();
 		System.out.println("final Result"+line);
-		manager.write(line);
+		manager.writeWithThread(line);
 		
 		
 	}

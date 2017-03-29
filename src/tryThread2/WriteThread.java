@@ -14,7 +14,7 @@ public class WriteThread implements Runnable{
 	WriteThread(String fileName) throws IOException
 	{
 		this.fileName = fileName;
-		System.out.println("file name"+fileName);
+		//System.out.println("file name"+fileName);
 		writer = new FileWriter(this.fileName);
 		
 	}
@@ -22,6 +22,12 @@ public class WriteThread implements Runnable{
 	public void setLine(String line)
 	{
 		this.line = line;
+		
+	}
+	
+	public String getLine()
+	{
+		return line;
 		
 	}
 	
