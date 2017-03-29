@@ -15,7 +15,7 @@ public class ThreadManager {
 	private int numberOfSet = 0;
 	private int fileNoInSet = 0;
 	
-	private ArrayList<ArrayList<File>> tempFileList=new ArrayList<ArrayList<File>>();
+	private ArrayList<ArrayList<File>> fileListArray=new ArrayList<ArrayList<File>>();
 	
 	private File fileDirectory;
 	private File[] fileListOfDirectory;
@@ -63,7 +63,7 @@ public class ThreadManager {
 		this.numberOfThread = numOfThread;
 		this.numberOfSet = this.numberOfThread;
 		
-		this.fileDirectory = new File(source);
+		this.fileDirectory = new File(this.source);
         this.fileListOfDirectory = this.fileDirectory.listFiles();
         //System.out.println("printing n:" + numberOfFiles + "jkl" + fileListOfDirectory.length);
         this.numberOfFiles = fileListOfDirectory.length;
@@ -88,8 +88,7 @@ public class ThreadManager {
 
 	public String readWithThread() throws InterruptedException, IOException
 	{
-		String result = "";
-        
+		//String result = "";        
         //initialize(source,destination,numberOfThread);
         
         int index = 0;
@@ -128,15 +127,22 @@ public class ThreadManager {
     				
     			}
     			
-    			tempFileList.add(tempFiles);
+    			fileListArray.add(tempFiles);
     		     			
     		}
     		
     		
-    		for(int i = 0; i < tempFileList.size(); i++ )
+    		for(int i = 0; i < fileListArray.size(); i++ )
     		{
-    			//System.out.println("set is: "+i);
-    			readThreads[i] = new ReadThread(tempFileList.get(i));
+    			/*
+    			for(File f : tempFileList.get(i))
+    			{
+    				System.out.println("set is: "+i+f.getName());
+    				
+    			}
+    			*/
+    			
+    			readThreads[i] = new ReadThread(fileListArray.get(i));
     			threads[i] = new Thread(readThreads[i]);
     			threads[i].start();
     			    			
@@ -151,15 +157,17 @@ public class ThreadManager {
 	private String merge() throws InterruptedException
 	{
 		String temp = "";
-		for(int i=0;i<tempFileList.size();i++)
+		for(int i=0;i<fileListArray.size();i++)
 		{
 			
 			threads[i].join();
-			temp=temp+readThreads[i].getResult();
+			temp = temp + "\n" + readThreads[i].getResult();
+			//System.out.println("the temp is in loop" + i + " :::" + temp);
 
 		}
 		
 		writeContent=writeContent+temp;
+		//System.out.println("the temp is"+temp);
 		
 		return temp;
 	}
@@ -169,7 +177,7 @@ public class ThreadManager {
 		String temp = "";
 		
 		//temp = getWriteContent();
-		//System.out.println("the line is"+temp);
+		//System.out.println("the line is"+line);
 				
     	this.writeThread.setLine(temp+line);
     	//System.out.println("I want to write"+writeContent);

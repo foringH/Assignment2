@@ -27,7 +27,7 @@ public class RandomFileGenerate {
 			FileWriter writer=new FileWriter(currentFile);
 			
 			//for serial string no in files
-			String uuid = "  " + i ;  
+			String uuid = "" + i + "\n";  
 			//for random strings in files			
 			//String uuid = UUID.randomUUID().toString();
 			

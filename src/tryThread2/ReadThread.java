@@ -55,6 +55,7 @@ public class ReadThread implements Runnable {
 	                
 	             }
 	             
+	             //result = result + "\n";
 	             reader.close();
 	             fileReader.close();
 	          

@@ -36,14 +36,18 @@ public class WriteThread implements Runnable{
 		//System.out.println("i'm writing thread"+id);
 		
 		try {
+			
 			write(line);
+			
 		}catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		try {
+			
 			close();
+			
 		}catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -54,6 +58,7 @@ public class WriteThread implements Runnable{
 	{
 		//destination=des;
 		//writer = new FileWriter(destination);
+		//System.out.println("i'm writing thread in write"+line);
 		writer.write(line);
 	}
 	
