@@ -5,10 +5,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.UUID;
 
-public class RandomFileGenerate {
+public class RandomTextFileGenerator {
 	String destination="D:/new/"; 
 	
-	RandomFileGenerate(String destination,int number) throws IOException
+	RandomTextFileGenerator(String destination,int number) throws IOException
 	{
 		if( destination.isEmpty() != true )
 		{

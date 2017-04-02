@@ -13,7 +13,8 @@ public class ReadThread implements Runnable {
 	//private File[] fileList;
 	private ArrayList<File> fileList = new ArrayList<File>();
 	
-	ReadThread(ArrayList<File> files)
+	
+	public ReadThread(ArrayList<File> files)
 	{
 		this.fileList = files;
 	}

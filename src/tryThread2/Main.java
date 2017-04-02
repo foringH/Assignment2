@@ -8,19 +8,19 @@ public class Main {
 	{
 		System.out.println("hello");
 		
-		String source = "D:/test/";
+		String source = "D:/test2/";
 		String destination = "D:/output3.txt";
-		int threadNo = 3;
+		int threadNo = 5;
 		
 		//RandomFileGenerate randomFiles = new RandomFileGenerate(source,1000);
 		
-		ThreadManager manager = new ThreadManager(source, destination, threadNo);
+		FileMerger manager = new FileMerger(source, destination, threadNo);
 				
 		String line = ""; 
-		line = line + manager.readWithThread();
+		line = line + manager.readFiles();
 		System.out.println("final Result" + line);
 		
-		manager.writeWithThread(line);
+		manager.writeFile(line);
 		
 		
 	}

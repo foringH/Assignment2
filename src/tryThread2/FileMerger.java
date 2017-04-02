@@ -4,14 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ThreadManager {
+public class FileMerger {
+	
 	public static String writeContent = "";
 	private int numberOfFiles = 0;
 	private String source = "";
 	private String destination = "";
 	private String result = "";
 	
-	private int numberOfThread = 0;
+	//////////////
+	public int numberOfThread = 0;  
+	///////////
 	private int numberOfSet = 0;
 	private int fileNoInSet = 0;
 	
@@ -26,9 +29,16 @@ public class ThreadManager {
 	private Thread mainThread;
 	
 	
-	public ThreadManager(String source,String destination, int threadNo) throws IOException
+	public FileMerger(String source,String destination, int threadNo) //throws IOException
 	{
-		initialize(source,destination,threadNo);
+		this.source = source;
+		this.destination = destination;
+		
+		this.numberOfThread = threadNo;
+		this.numberOfSet = this.numberOfThread;
+		
+		
+		//initialize(source,destination,threadNo);
 	}
 	
 	public String getWriteContent()
@@ -57,11 +67,13 @@ public class ThreadManager {
 		
 	private void initialize(String source,String destination,int numOfThread) throws IOException
 	{
+		/*
 		this.source = source;
 		this.destination = destination;
 		
 		this.numberOfThread = numOfThread;
 		this.numberOfSet = this.numberOfThread;
+		*/
 		
 		this.fileDirectory = new File(this.source);
         this.fileListOfDirectory = this.fileDirectory.listFiles();
@@ -77,61 +89,89 @@ public class ThreadManager {
         
         this.fileNoInSet = (this.numberOfFiles/this.numberOfSet);
         
+        
         writeThread = new WriteThread(this.destination);
 		mainThread = new Thread(writeThread); 
         
 		readThreads = new ReadThread[this.numberOfSet];
 		threads = new Thread[this.numberOfSet];
+		
 				
 	}
 	
-
-	public String readWithThread() throws InterruptedException, IOException
+	
+	private void distributeFilesAmongThreads()
 	{
-		//String result = "";        
-        //initialize(source,destination,numberOfThread);
-        
-        int index = 0;
+		fileListArray = new ArrayList<ArrayList<File>>();
+		int index = 0;
 		
-    		for(int setNumber = 0; setNumber < numberOfSet; setNumber++)
-    		{
-    			
-    			ArrayList<File> tempFiles = new ArrayList<File>(); 
-    			
-    			if(setNumber < numberOfSet-1)
-    			{
-    				for( int fileNumber = 0; fileNumber < fileNoInSet; fileNumber++ )
-    				{
-    					index = ( fileNoInSet * setNumber ) + fileNumber;
-    					
-    					//System.out.println("my set no:"+setNumber+" filrNo:"+index);
-    					
-    					tempFiles.add(fileListOfDirectory[index]);
+		for(int setNumber = 0; setNumber < numberOfSet; setNumber++)
+		{
+			
+			ArrayList<File> tempFiles = new ArrayList<File>(); 
+			
+			if(setNumber < numberOfSet-1)
+			{
+				for( int fileNumber = 0; fileNumber < fileNoInSet; fileNumber++ )
+				{
+					index = ( fileNoInSet * setNumber ) + fileNumber;
+					
+					//System.out.println("my set no:"+setNumber+" filrNo:"+index);
+					
+					tempFiles.add(fileListOfDirectory[index]);
 
-    				}
-    				
-    			}
-    			else
-    			{
-    				index = index + 1;
-    				
-    				while(index < numberOfFiles)
-    				{					
-    					//System.out.println("my set no:"+setNumber+" filrNo:"+index);
-    					
-    					tempFiles.add(fileListOfDirectory[index]);
-    		        	    		        	
-    		        	index++;
-    					
-    				}
-    				
-    			}
-    			
-    			fileListArray.add(tempFiles);
-    		     			
-    		}
-    		
-    		
+				}
+				
+			}
+			else
+			{
+				index = index + 1;
+				
+				while(index < numberOfFiles)
+				{					
+					//System.out.println("my set no:"+setNumber+" filrNo:"+index);
+					
+					tempFiles.add(fileListOfDirectory[index]);
+		        	    		        	
+		        	index++;
+					
+				}
+				
+			}
+			
+			fileListArray.add(tempFiles);
+		     			
+		}
+
+		
+		
+	}
+	
+	
+	public String readFiles() //throws  IOException
+	{
+		String result = "";  
+		
+		//System.out.println("the no of THREAD IS::"+this.numberOfThread);
+		
+        try {
+			initialize(this.source,this.destination,this.numberOfThread);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println("error in initializing");
+			//e.printStackTrace();
+		}
+        finally{
+        	if ( (this.source == null) || (this.destination == null) )
+        	{
+        		throw new NullPointerException();
+        	}
+        }
+        
+        distributeFilesAmongThreads();
+        
+        //System.out.println("SIZE OF FILELISTARRAY:"+fileListArray.size());
+            		
     		for(int i = 0; i < fileListArray.size(); i++ )
     		{
     			/*
@@ -141,14 +181,20 @@ public class ThreadManager {
     				
     			}
     			*/
-    			
+    			//System.out.println("value of "+i);
     			readThreads[i] = new ReadThread(fileListArray.get(i));
     			threads[i] = new Thread(readThreads[i]);
     			threads[i].start();
     			    			
     		}
     		    		
-    		result = result + merge();
+    		try {
+				result = result + merge();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				System.out.println("error in merging");
+				//e.printStackTrace();
+			}
     		
     		    		
     		return result;
@@ -172,14 +218,14 @@ public class ThreadManager {
 		return temp;
 	}
 	
-	public void writeWithThread(String line)
+	public void writeFile(String line)
 	{
 		String temp = "";
 		
 		//temp = getWriteContent();
 		//System.out.println("the line is"+line);
 				
-    	this.writeThread.setLine(temp+line);
+    	this.writeThread.setLine(temp + line);
     	//System.out.println("I want to write"+writeContent);
     	
 		this.mainThread.start();

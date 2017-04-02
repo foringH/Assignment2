@@ -7,15 +7,28 @@ import java.io.IOException;
 public class WriteThread implements Runnable{
 //	private int id=888888;
 	private String fileName = "";
-	private String destination = "D:/output5.txt";
-	private FileWriter writer = new FileWriter(destination);
+	//private String destination = "D:/output5.txt";
+	private FileWriter writer; // = new FileWriter(destination);
 	private String line = "";
 	
-	public WriteThread(String fileName) throws IOException
+	public WriteThread(String fileName)
 	{
 		this.fileName = fileName;
+		//createFile();
 		//System.out.println("file name"+fileName);
-		writer = new FileWriter(this.fileName);
+		//writer = new FileWriter(this.fileName);
+		
+	}
+	
+	private void createFile() //throws IOException
+	{
+		try {
+			writer = new FileWriter(this.fileName);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			System.out.println("error in creation of file");
+		}
 		
 	}
 	
@@ -35,14 +48,14 @@ public class WriteThread implements Runnable{
 	{
 		//System.out.println("i'm writing thread"+id);
 		
-		try {
+		//try {
 			
 			write(line);
 			
-		}catch (IOException e) {
+	//	}catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//	e.printStackTrace();
+		//}
 		
 		try {
 			
@@ -54,15 +67,22 @@ public class WriteThread implements Runnable{
 		}
 	}
 	
-	public void write(String line) throws IOException 
+	public void write(String line) //throws IOException 
 	{
 		//destination=des;
 		//writer = new FileWriter(destination);
 		//System.out.println("i'm writing thread in write"+line);
-		writer.write(line);
+		try {
+			createFile();
+			writer.write(line);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
-	public void close() throws IOException
+	private void close() throws IOException
 	{		
 		writer.close();
 	}
